@@ -195,14 +195,14 @@ size_t UDPAudio::play(const uint8_t *data, size_t length, TickType_t ticks_to_wa
     this->accumulated_frames_written_ += this->audio_stream_info_.bytes_to_frames(bytes_written);
     const uint32_t new_playback_ms =
         this->audio_stream_info_.frames_to_milliseconds_with_remainder(&this->accumulated_frames_written_);
-    const uint32_t remainder_us =
+    const int64_t remainder_us =
         this->audio_stream_info_.frames_to_microseconds(this->accumulated_frames_written_);
 
     uint32_t pending_frames = 0; // No buffer, so no pending frames
     const uint32_t pending_ms = 0;
     uint32_t write_timestamp = micros();
 
-    this->audio_output_callback_(new_playback_ms, remainder_us, pending_ms, write_timestamp);
+    this->audio_output_callback_(new_playback_ms, remainder_us);
   }
 
   return bytes_written;
